@@ -1,0 +1,6 @@
+{
+  "name": "REALISM STUDIO AI",
+  "description": "منصة هندسية احترافية لتوليد وضبط برومبتات واقعية تحاكي كاميرا الهواتف الذكية والتصوير العفوي والهوية البصرية",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
