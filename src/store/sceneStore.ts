@@ -1,4 +1,3 @@
-import { apiUrl } from '../lib/ai/apiClient';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -303,7 +302,7 @@ export function useSceneStore() {
 
     try {
       // First try backend AI endpoint
-      const response = await fetch(apiUrl('analyze-scene'), {
+      const response = await fetch('/api/analyze-scene', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -385,7 +384,7 @@ export function useSceneStore() {
     if (withAiRefinement) {
       setIsRefiningPrompt(true);
       try {
-        const response = await fetch(apiUrl('refine-prompt'), {
+        const response = await fetch('/api/refine-prompt', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
