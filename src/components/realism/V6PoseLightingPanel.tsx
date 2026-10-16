@@ -52,7 +52,7 @@ export function V6PoseLightingPanel(){
     onChange={e=>patchCamera({angle:e.target.value as CameraAngle})}>{angles.map(a=><option key={a.value} value={a.value}>{a.label}</option>)}</select>
   </label>
   <label className="block text-xs space-y-1">مسافة العدسة عن الوجه: {state.pose.selfieArmDistanceCm} سم
-   <input className="w-full accent-amber-500" aria-label="مسافة السيلفي" type="range" min="35" max="80" step="1"
+   <input className="w-full accent-amber-500" aria-label="مسافة السيلفي" type="range" min="30" max={state.camera.mode==='front_selfie'?75:90} step="1"
     value={state.pose.selfieArmDistanceCm} onChange={e=>{
      const distance=Number(e.target.value);
      updateGlobalSceneState(prev=>({...prev,pose:{...prev.pose,selfieArmDistanceCm:distance},
