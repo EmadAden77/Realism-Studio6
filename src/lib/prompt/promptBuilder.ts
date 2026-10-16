@@ -1,3 +1,4 @@
+import {compileDomesticPrompt} from '../domestic/domesticOptions';
 import {resolvePhysicsState,compileMechanicalPrompt} from '../physics/PhysicsEngine';
 import { buildV7CalibrationPrompt } from '../v7/physicalCalibration';
 /**
@@ -420,7 +421,8 @@ export function assembleMasterPrompt(input: SceneState): { englishPrompt: string
     buildUnifiedImagingPrompt(state),
     buildV5Prompt(state),
     buildV7CalibrationPrompt(state),
-    compileMechanicalPrompt(state)
+    compileMechanicalPrompt(state),
+    compileDomesticPrompt(state)
   ];
 
   // Join sections cleanly with period separation for modern diffusion engines
