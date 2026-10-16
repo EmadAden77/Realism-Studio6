@@ -1,3 +1,4 @@
+import {compileNightLaptopPrompt} from '../physics/nightLaptopSelfie';
 import {compileDomesticPrompt} from '../domestic/domesticOptions';
 import {compileSelectedHair} from '../physics/hairPhysicsMatrix';
 import type {SceneState} from '../../types/scene';
@@ -36,7 +37,7 @@ export function compileLocalPhysicsPrompt(state:SceneState):string{
  const selected=[
   buildIdentityPrompt(s),buildHairPrompt(s),buildPosePrompt(s),buildClothingAndFabricPrompt(s),
   buildEnvironmentPrompt(s),buildCameraPrompt(s),compileMaterialContactPrompt(s),
-  compileSelectedHair(s),compileDomesticPrompt(s)
+  compileSelectedHair(s),compileDomesticPrompt(s),compileNightLaptopPrompt(s)
  ];
  return sanitizeLocalPhysicsPrompt(
   'A candid unretouched mobile photograph. '+optical+'. '+selected.filter(Boolean).join('. ')+'. '+light+
