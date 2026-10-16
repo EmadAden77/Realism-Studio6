@@ -23,13 +23,13 @@ const groups=[
 export function StudioOptionsOrganizer(){
  const [query,setQuery]=useState('');
  useEffect(()=>{const onFilter=(event:Event)=>setQuery((event as CustomEvent<string>).detail||'');window.addEventListener('realism-studio-filter',onFilter);return ()=>window.removeEventListener('realism-studio-filter',onFilter);},[]);
- const [opened,setOpened]=useState<string[]>(['essential']);
+ const [opened,setOpened]=useState<string[]>([]);
  const filtered=groups.filter(g=>(g.title+' '+g.description+' '+g.tags).toLowerCase().includes(query.trim().toLowerCase()));
  const toggle=(id:string)=>setOpened(old=>old.includes(id)?old.filter(x=>x!==id):[...old,id]);
  return <section dir="rtl" id="studio-options" className="space-y-3" aria-label="إعدادات الواقعية المنظمة">
   <div className="px-1">
    <h2 className="text-lg font-bold text-white">مركز أدوات الواقعية</h2>
-   <p className="text-xs text-neutral-400 leading-5 mt-1">خمسة أقسام مرتبة من الإعدادات اليومية إلى الأدوات المتقدمة. جميع وظائف V5–V7 باقية.</p>
+   <p className="text-xs text-neutral-400 leading-5 mt-1">الأدوات المتقدمة منظمة هنا. افتح القسم الذي تحتاجه فقط؛ الإعداد السريع بالأعلى.</p>
   </div>
   <div className="flex flex-col sm:flex-row gap-2">
    <label className="relative flex-1">
