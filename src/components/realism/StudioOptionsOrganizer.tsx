@@ -1,3 +1,4 @@
+import {DomesticSelfieStudio} from './DomesticSelfieStudio';
 import React, {useState} from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import {ContextualPhysicsPanel} from './ContextualPhysicsPanel';
@@ -7,6 +8,7 @@ import {V6ReferenceMemory} from './V6ReferenceMemory';
 import {V7PhysicalCalibrationPanel} from './V7PhysicalCalibrationPanel';
 
 const groups=[
+ {id:'domestic',title:'00 · المنزل والسيلفي',description:'أماكن منزلية وزوايا وحركات يومية واقعية',tags:'منزل غرفة مرآة زاوية حركة جلسة إضاءة',Component:DomesticSelfieStudio},
  {id:'essential',title:'01 · المشهد والكاميرا',description:'الوضعية، زاوية السيلفي ومسافة التصوير',tags:'سيلفي كاميرا زاوية وضعية مسافة إضاءة',Component:V6PoseLightingPanel},
  {id:'physics',title:'02 · فيزياء المشهد',description:'تفاعل اليد والخامات والضوء والعناصر',tags:'ضوء خامات شعر تفاعل فيزياء',Component:ContextualPhysicsPanel},
  {id:'room',title:'03 · معايرة المكان والإضاءة',description:'هندسة الغرفة وشاشة الهاتف',tags:'غرفة نوم شاشة هاتف ابعاد هندسة معايرة',Component:V7PhysicalCalibrationPanel},
