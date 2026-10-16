@@ -1,3 +1,4 @@
+import {resolvePhysicsState,compileMechanicalPrompt} from '../physics/PhysicsEngine';
 import { buildV7CalibrationPrompt } from '../v7/physicalCalibration';
 /**
  * @license
@@ -386,7 +387,8 @@ export function buildReferenceFidelityPrompt(state: SceneState): string {
 }
 
 // Master English Prompt Assembler with V2 & V3 Scene Intelligence
-export function assembleMasterPrompt(state: SceneState): { englishPrompt: string; negativePrompt: string } {
+export function assembleMasterPrompt(input: SceneState): { englishPrompt: string; negativePrompt: string } {
+  const state = resolvePhysicsState(input).state;
   const sections: string[] = [
     buildIdentityPrompt(state),
     buildReferenceFidelityPrompt(state),
@@ -411,7 +413,8 @@ export function assembleMasterPrompt(state: SceneState): { englishPrompt: string
     buildPhotographicImperfectionsPrompt(state),
     buildUnifiedImagingPrompt(state),
     buildV5Prompt(state),
-    buildV7CalibrationPrompt(state)
+    buildV7CalibrationPrompt(state),
+    compileMechanicalPrompt(state)
   ];
 
   // Join sections cleanly with period separation for modern diffusion engines

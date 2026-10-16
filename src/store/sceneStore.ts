@@ -1,3 +1,4 @@
+import {resolvePhysicsState, type RuleCorrection} from '../lib/physics/PhysicsEngine';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -47,12 +48,15 @@ type Listener = () => void;
 let globalSceneState: SceneState = migrateSceneSchema(loadActiveSceneState());
 let historyStack: SceneState[] = [];
 let redoStack: SceneState[] = [];
+let lastPhysicsCorrections:RuleCorrection[]=[];
 const listeners = new Set<Listener>();
 
 function notify() {
   saveActiveSceneState(globalSceneState);
   listeners.forEach((l) => l());
 }
+
+export function getLastPhysicsCorrections():readonly RuleCorrection[]{return lastPhysicsCorrections;}
 
 export function getGlobalSceneState(): SceneState {
   return globalSceneState;
@@ -67,7 +71,9 @@ export function updateGlobalSceneState(
     if (historyStack.length > 30) historyStack.shift();
     redoStack = [];
   }
-  const next = updater(globalSceneState);
+  const resolved = resolvePhysicsState(updater(globalSceneState));
+  const next = resolved.state;
+  lastPhysicsCorrections = resolved.corrections;
   
   // Auto-validate and recalculate V3 intelligence
   next.validationIssues = validateScene(next);
@@ -355,7 +361,9 @@ export function useSceneStore() {
     if (historyStack.length === 0) return;
     const previous = historyStack.pop()!;
     redoStack.push(JSON.parse(JSON.stringify(globalSceneState)));
-    globalSceneState = previous;
+    const resolved = resolvePhysicsState(previous);
+    globalSceneState = resolved.state;
+    lastPhysicsCorrections = resolved.corrections;
     notify();
   }, []);
 
@@ -363,7 +371,9 @@ export function useSceneStore() {
     if (redoStack.length === 0) return;
     const next = redoStack.pop()!;
     historyStack.push(JSON.parse(JSON.stringify(globalSceneState)));
-    globalSceneState = next;
+    const resolved = resolvePhysicsState(next);
+    globalSceneState = resolved.state;
+    lastPhysicsCorrections = resolved.corrections;
     notify();
   }, []);
 
