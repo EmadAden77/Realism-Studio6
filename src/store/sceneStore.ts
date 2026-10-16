@@ -766,7 +766,7 @@ export function useSceneStore() {
       hair: {
         ...prev.hair,
         presetId: h.id,
-        direction: h.direction,
+        direction: /left|leftward/i.test(h.direction) ? 'side_left' : /right|rightward/i.test(h.direction) ? 'side_right' : /backward|combed back/i.test(h.direction) ? 'backward' : /forward|forehead/i.test(h.direction) ? 'forward' : /reference|observed/i.test(h.direction) ? 'original' : 'irregular',
         densityLock: prev.identity.locks.hairDensity ? true : prev.hair.densityLock
       },
       v4RecentlyUsed: Array.from(new Set([presetId, ...(prev.v4RecentlyUsed || [])])).slice(0, 30)
