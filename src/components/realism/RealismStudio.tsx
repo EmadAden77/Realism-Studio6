@@ -1,3 +1,4 @@
+import {PhysicsTelemetryDock} from '../physics/PhysicsTelemetryDock';
 import {StudioOptionsOrganizer} from './StudioOptionsOrganizer';
 /**
  * @license
@@ -51,7 +52,7 @@ export const RealismStudio: React.FC = () => {
   };
 
   return (
-    <div className="space-y-5 pb-24 max-w-4xl mx-auto px-3 sm:px-6 pt-3">
+    <div className="studio-workspace pb-24 px-3 sm:px-5 pt-3"><div className="space-y-5 min-w-0">
       {/* 1. Header Banner & Quick Actions */}
       <section className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-4 sm:p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
@@ -406,6 +407,7 @@ export const RealismStudio: React.FC = () => {
         isOpen={isReadinessOpen}
         onClose={() => setIsReadinessOpen(false)}
       />
+      </div><PhysicsTelemetryDock />
     </div>
   );
 };
