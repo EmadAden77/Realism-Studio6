@@ -301,62 +301,13 @@ export function useSceneStore() {
     setAnalysisMessage('جاري تحليل المشهد وتطبيق القواعد الفيزيائية...');
 
     try {
-      // First try backend AI endpoint
-      const response = await fetch('/api/analyze-scene', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          description: textToAnalyze,
-          currentScene: globalSceneState
-        })
-      });
-
-      const resData = await response.json();
-
-      if (!resData.fallback && resData.data) {
-        // AI returned structured data
-        const d = resData.data;
-        updateGlobalSceneState((prev) => {
-          const next = { ...prev };
-          if (d.environmentCategory) next.environmentCategory = d.environmentCategory;
-          if (d.cameraMode) {
-            next.camera.mode = d.cameraMode;
-            next.camera.focalLengthEquivMm = d.cameraMode === 'front_selfie' ? 21 : 23;
-            next.camera.aperture = d.cameraMode === 'front_selfie' ? 'f/2.0' : 'f/1.63';
-          }
-          if (d.lightingMode) next.lighting.mode = d.lightingMode;
-          if (d.upperGarmentEn) {
-            next.clothing.upper.nameEn = d.upperGarmentEn;
-            if (d.upperGarmentAr) next.clothing.upper.nameAr = d.upperGarmentAr;
-          }
-          if (d.lowerGarmentEn) {
-            next.clothing.lower.nameEn = d.lowerGarmentEn;
-            if (d.lowerGarmentAr) next.clothing.lower.nameAr = d.lowerGarmentAr;
-          }
-          if (typeof d.disorderLevel === 'number') {
-            next.disorder.level = Math.min(4, Math.max(0, d.disorderLevel)) as any;
-          }
-          const { correctedState } = autoCorrectScene(next);
-          return correctedState;
-        });
-        setAnalysisMessage(d.summaryAr || 'تم استخراج وتنسيق المشهد بنجاح عبر الذكاء الاصطناعي');
-      } else {
-        // Fallback to deterministic interpreter
-        const { updatedState, extractedTokens } = parseSceneDescription(
-          textToAnalyze,
-          globalSceneState
-        );
-        updateGlobalSceneState(() => updatedState);
-        setAnalysisMessage(`تم التحليل الفوري للمشهد (${Object.keys(extractedTokens).length} خصائص مطابقة)`);
-      }
-    } catch {
-      // Deterministic offline fallback
+      // GitHub Pages-only mode: deterministic scene analysis, no external API calls.
       const { updatedState, extractedTokens } = parseSceneDescription(
         textToAnalyze,
         globalSceneState
       );
       updateGlobalSceneState(() => updatedState);
-      setAnalysisMessage(`تم التحليل الفوري للمشهد (${Object.keys(extractedTokens).length} خصائص مطابقة)`);
+      setAnalysisMessage(`تم التحليل المحلي للمشهد (${Object.keys(extractedTokens).length} خصائص مطابقة)`);
     } finally {
       setIsAnalyzing(false);
       setTimeout(() => setAnalysisMessage(null), 4000);
@@ -381,41 +332,10 @@ export function useSceneStore() {
       }
     }));
 
+    // Gemini refinement is intentionally disabled in local-only GitHub Pages mode.
+    // The validated deterministic prompt above remains available for both actions.
     if (withAiRefinement) {
-      setIsRefiningPrompt(true);
-      try {
-        const response = await fetch('/api/refine-prompt', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            rawPrompt: englishPrompt,
-            negativePrompt,
-            sceneSummary: {
-              environment: globalSceneState.environmentCategory,
-              camera: globalSceneState.camera.mode,
-              lighting: globalSceneState.lighting.mode,
-              identityHeight: globalSceneState.identity.heightCm
-            }
-          })
-        });
-
-        const resData = await response.json();
-        if (resData.data && resData.data.refinedPrompt) {
-          updateGlobalSceneState((prev) => ({
-            ...prev,
-            output: {
-              ...prev.output,
-              englishPrompt: resData.data.refinedPrompt,
-              negativePrompt: resData.data.refinedNegativePrompt || prev.output.negativePrompt,
-              isAiRefined: true
-            }
-          }));
-        }
-      } catch (err) {
-        console.warn('AI Refine fallback:', err);
-      } finally {
-        setIsRefiningPrompt(false);
-      }
+      console.info('AI refinement unavailable in local-only mode; deterministic prompt retained.');
     }
   }, []);
 
