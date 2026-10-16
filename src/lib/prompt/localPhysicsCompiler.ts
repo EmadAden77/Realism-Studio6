@@ -1,3 +1,5 @@
+import {compileDomesticPrompt} from '../domestic/domesticOptions';
+import {compileSelectedHair} from '../physics/hairPhysicsMatrix';
 import type {SceneState} from '../../types/scene';
 import {resolvePhysicsState,compileMaterialContactPrompt} from '../physics/PhysicsEngine';
 import {buildIdentityPrompt,buildClothingAndFabricPrompt,buildCameraPrompt,buildEnvironmentPrompt,buildPosePrompt,buildHairPrompt} from './promptBuilder';
@@ -33,7 +35,8 @@ export function compileLocalPhysicsPrompt(state:SceneState):string{
   :'Lighting follows the selected actual household or outdoor practical sources and shared shadow direction; no invented lights';
  const selected=[
   buildIdentityPrompt(s),buildHairPrompt(s),buildPosePrompt(s),buildClothingAndFabricPrompt(s),
-  buildEnvironmentPrompt(s),buildCameraPrompt(s),compileMaterialContactPrompt(s)
+  buildEnvironmentPrompt(s),buildCameraPrompt(s),compileMaterialContactPrompt(s),
+  compileSelectedHair(s),compileDomesticPrompt(s)
  ];
  return sanitizeLocalPhysicsPrompt(
   'A candid unretouched mobile photograph. '+optical+'. '+selected.filter(Boolean).join('. ')+'. '+light+
