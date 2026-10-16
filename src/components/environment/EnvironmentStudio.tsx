@@ -1,3 +1,4 @@
+import {constraintById} from '../../lib/physics/UIConstraints';
 import {RealWardrobeCatalog} from './RealWardrobeCatalog';
 /**
  * @license
@@ -45,6 +46,10 @@ export const EnvironmentStudio: React.FC = () => {
     updateDisorder,
     updateGlobalSceneState
   } = useSceneStore();
+
+  const secondaryLightLock=constraintById(state,'secondary_light');
+  const bokehLock=constraintById(state,'heavy_bokeh');
+  const reachLock=constraintById(state,'selfie_overreach');
 
   const subTabs: { id: SceneSubTab; labelAr: string; icon: React.FC<{ className?: string }> }[] = [
     { id: 'location', labelAr: 'الموقع والبيئة', icon: MapPin },
@@ -211,6 +216,16 @@ export const EnvironmentStudio: React.FC = () => {
               </div>
             </div>
 
+            <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-3 mb-4 space-y-2">
+              <p className="text-xs text-cyan-200 font-bold">الأقفال البصرية المرتبطة بالكاميرا</p>
+              <label title={bokehLock.reasonAr} className="flex items-start gap-2 text-xs text-neutral-300">
+                <input type="checkbox" disabled={bokehLock.disabled} checked={false} readOnly className="accent-cyan-400 mt-0.5"/>
+                عزل خلفية اصطناعي قوي
+              </label>
+              {bokehLock.disabled&&<p role="note" className="text-[11px] text-amber-300">🔒 {bokehLock.reasonAr}</p>}
+              <p className="text-[11px] text-neutral-400 font-mono" dir="ltr">{state.camera.focalLengthEquivMm}mm eq. • {state.camera.aperture} • {state.camera.sensorSize}</p>
+            </div>
+
             {/* Aspect Ratio */}
             <div className="mb-4">
               <label className="text-xs text-neutral-300 font-semibold block mb-1.5">أبعاد الصورة (Aspect Ratio):</label>
@@ -324,7 +339,12 @@ export const EnvironmentStudio: React.FC = () => {
               })}
             </div>
 
-            <div className="p-3 bg-neutral-950/70 border border-neutral-800 rounded-xl text-xs text-neutral-300">
+            <div className="p-3 bg-neutral-950/70 border border-neutral-800 rounded-xl text-xs text-neutral-300 space-y-2">
+              <label className="flex gap-2 items-center">
+                <input type="checkbox" checked={state.lighting.secondarySourceEnabled} disabled={secondaryLightLock.disabled} title={secondaryLightLock.reasonAr} onChange={e=>updateLighting({secondarySourceEnabled:e.target.checked})} className="accent-cyan-400"/>
+                مصدر إضاءة ثانوي
+              </label>
+              {secondaryLightLock.disabled&&<p role="note" className="text-amber-300 text-[11px]">🔒 {secondaryLightLock.reasonAr}</p>}
               <span className="font-bold text-amber-300 block mb-1">قواعد الإضاءة المطبقة:</span>
               <ul className="text-[11px] text-neutral-400 space-y-1 list-disc list-inside">
                 <li>منع إضاءة الحواف المصطنعة (No Fake Rim Light)</li>
@@ -383,7 +403,7 @@ export const EnvironmentStudio: React.FC = () => {
                 <input
                   type="range"
                   min="40"
-                  max="70"
+                  max={reachLock.disabled?75:90}
                   value={state.pose.selfieArmDistanceCm}
                   onChange={(e) => updatePose({ selfieArmDistanceCm: Number(e.target.value) })}
                   className="w-full accent-amber-500 cursor-pointer"
