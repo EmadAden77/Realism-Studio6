@@ -39,6 +39,14 @@ export function buildDynamicHairPrompt(state: SceneState): string {
     );
   }
 
+  const handAction = state.v5Context?.handAction || 'none';
+  if (handAction === 'touch_hair') {
+    parts.push('hand touches and temporarily displaces the existing locks at the true contact point; exposed scalp and temple recession retain reference density, no new strands');
+  }
+  if (state.v5Context?.climate === 'after_workout') {
+    parts.push('only context-supported subtle strand grouping from post-exercise moisture; no automatically wet scalp or additional hair growth');
+  }
+
   if (hair.preventArtificialThickening) {
     parts.push(
       'strictly no artificial hair thickening, no synthetic hairline advancement, no helmet-like wig block density'
