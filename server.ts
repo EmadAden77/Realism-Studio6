@@ -28,7 +28,7 @@ const allowedOrigins = new Set(
 );
 app.use('/api', (req, res, next) => {
   const origin = req.headers.origin;
-  if (origin && !allowedOrigins.has(origin) && !origin.endsWith('.vercel.app')) {
+  if (origin && !allowedOrigins.has(origin)) {
     return res.status(403).json({ error: 'Origin not allowed' });
   }
   if (origin) {
