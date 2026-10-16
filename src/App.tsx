@@ -17,7 +17,7 @@ import { ValidationPanel } from './components/validation/ValidationPanel';
 import { SettingsModal } from './components/settings/SettingsModal';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<NavTab>('home');
+  const [activeTab, setActiveTab] = useState<NavTab>('realism');
   const [isValidationOpen, setIsValidationOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isImageReviewOpen, setIsImageReviewOpen] = useState(false);
