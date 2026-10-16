@@ -35,11 +35,20 @@ export function StudioOptionsOrganizer(){
     <button onClick={()=>setOpened([])} className="min-h-11 flex-1 sm:flex-none rounded-xl border border-neutral-700 px-3 text-xs text-neutral-200">طي الكل</button>
    </div>
   </div>
-  <div className="space-y-2">
+  <div className="studio-control-layout">
+   <nav aria-label="فئات الاستوديو الهندسية" className="studio-control-rail">
+    <div className="text-[11px] font-bold tracking-wide text-neutral-500 mb-2">WORKSPACE NAVIGATION</div>
+    {groups.map(g=><button key={g.id} type="button" onClick={()=>{
+     setQuery('');
+     setOpened(old=>old.includes(g.id)?old:[...old,g.id]);
+     requestAnimationFrame(()=>document.getElementById('studio-group-'+g.id)?.scrollIntoView({behavior:'smooth',block:'start'}));
+    }} className={'studio-rail-button '+(opened.includes(g.id)?'studio-rail-active':'')} title={g.description}>{g.title}<span className="block text-[10px] text-neutral-500 mt-1">{g.description}</span></button>)}
+   </nav>
+   <div className="space-y-2 min-w-0">
    {filtered.map((g)=>{
     const active=opened.includes(g.id)||Boolean(query.trim());
     const Body=g.Component;
-    return <section key={g.id} className={'rounded-2xl border overflow-hidden '+(active?'border-amber-500/30 bg-neutral-900/50':'border-neutral-800 bg-neutral-900/20')}>
+    return <section id={'studio-group-'+g.id} key={g.id} className={'rounded-2xl border overflow-hidden '+(active?'border-amber-500/30 bg-neutral-900/50':'border-neutral-800 bg-neutral-900/20')}>
      <button type="button" aria-expanded={active} aria-controls={'studio-section-'+g.id} onClick={()=>toggle(g.id)} className="w-full min-h-16 flex items-center justify-between gap-3 p-4 text-right focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400">
       <span className="min-w-0"><span className="block text-sm font-bold text-white">{g.title}</span><span className="block mt-1 text-xs leading-5 text-neutral-400">{g.description}</span></span>
       <ChevronDown aria-hidden="true" className={'shrink-0 w-5 h-5 text-amber-400 transition-transform '+(active?'rotate-180':'')}/>
@@ -48,6 +57,6 @@ export function StudioOptionsOrganizer(){
     </section>;
    })}
    {filtered.length===0&&<p className="rounded-xl border border-neutral-800 p-5 text-sm text-neutral-400">لا توجد إعدادات مطابقة. جرّب كلمة أخرى.</p>}
-  </div>
+   </div></div>
  </section>;
 }
