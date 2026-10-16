@@ -612,6 +612,8 @@ export interface SceneState {
   sceneDiff: SceneDiffState;
   readinessStatus: SceneReadiness;
   
+  v7Calibration?: import('../lib/v7/physicalCalibration').V7Calibration;
+
   // V5 Contextual Physics (optional for old saved scenes)
   v5Context?: import('../lib/v5/contextualPhysics').V5Context;
 

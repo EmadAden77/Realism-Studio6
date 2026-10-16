@@ -1,3 +1,4 @@
+import { V7PhysicalCalibrationPanel } from './V7PhysicalCalibrationPanel';
 import { V6ReferenceMemory } from './V6ReferenceMemory';
 import { V6PoseLightingPanel } from './V6PoseLightingPanel';
 import { V6LocalStudio } from './V6LocalStudio';
@@ -396,6 +397,7 @@ export const RealismStudio: React.FC = () => {
       <V6LocalStudio />
       <V6PoseLightingPanel />
       <V6ReferenceMemory />
+      <V7PhysicalCalibrationPanel />
 
       {/* V3 Modals */}
       <DifferentialEditorModal
