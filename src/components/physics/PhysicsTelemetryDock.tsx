@@ -1,6 +1,6 @@
 import React, {useMemo,useState} from 'react';
 import {Activity,ShieldCheck,Copy,ChevronDown,LockKeyhole,AlertTriangle} from 'lucide-react';
-import {useSceneStore} from '../../store/sceneStore';
+import {useSceneStore,getLastPhysicsCorrections} from '../../store/sceneStore';
 import {getActivePhysicsLocks,calculateIntegrity,opticalDiagnostics,lightDiagnostics} from '../../lib/physics/PhysicsEngine';
 import {assembleMasterPrompt} from '../../lib/prompt/promptBuilder';
 export function PhysicsTelemetryDock(){
@@ -8,6 +8,7 @@ export function PhysicsTelemetryDock(){
  const [showOutput,setShowOutput]=useState(false);
  const [notice,setNotice]=useState('');
  const locks=useMemo(()=>getActivePhysicsLocks(state),[state]);
+ const corrections=getLastPhysicsCorrections();
  const integrity=calculateIntegrity(state);
  const optics=opticalDiagnostics(state);
  const light=lightDiagnostics(state);
@@ -31,6 +32,13 @@ export function PhysicsTelemetryDock(){
    <div className="studio-metric"><span>Light ×2 distance</span><strong>{light.relativeIlluminanceAtDoubleDistance.toFixed(2)}×</strong></div>
   </div>
   <p className="text-[11px] leading-5 text-neutral-500">البصريات والإضاءة: تقديرات نموذجية ذات افتراضات وليست قياسات مباشرة للكاميرا أو للمشهد.</p>
+  {corrections.length>0&&<section role="status" aria-live="polite" className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 space-y-1">
+   <h3 className="text-xs font-bold text-amber-200">تصحيح تلقائي للخيارات المتعارضة</h3>
+   {corrections.map(c=><p className="text-xs text-amber-100/80 leading-5" key={c.id}>{c.labelAr}: {c.reasonAr}</p>)}
+  </section>}
+  {state.camera.mode==='front_selfie'&&<label title="العزل الصناعي القوي ليس خيارًا مسموحًا في وضع سيلفي الكاميرا الأمامية" className="flex items-center gap-2 text-xs text-neutral-500 bg-white/5 rounded-lg p-2 border border-white/10">
+   <input type="checkbox" disabled checked={false} readOnly className="accent-cyan-400"/> عزل خلفية صناعي قوي (مقفل: بصريات الهاتف الأمامية)
+  </label>}
   <section>
    <h3 className="text-xs text-neutral-300 font-bold mb-2">الأقفال النشطة</h3>
    <div className="space-y-1.5">{locks.map(lock=><div title={lock.reasonAr} key={lock.id} className="flex items-start gap-2 p-2 rounded-lg bg-white/[0.035] border border-white/5">
