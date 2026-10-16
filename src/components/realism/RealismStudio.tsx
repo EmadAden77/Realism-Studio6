@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ContextualPhysicsPanel } from './ContextualPhysicsPanel';
 import React, { useState } from 'react';
 import {
   ShieldCheck,
@@ -387,6 +388,8 @@ export const RealismStudio: React.FC = () => {
       </section>
         </>
       )}
+
+      <ContextualPhysicsPanel />
 
       {/* V3 Modals */}
       <DifferentialEditorModal

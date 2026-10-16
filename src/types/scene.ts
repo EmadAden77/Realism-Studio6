@@ -612,6 +612,9 @@ export interface SceneState {
   sceneDiff: SceneDiffState;
   readinessStatus: SceneReadiness;
   
+  // V5 Contextual Physics (optional for old saved scenes)
+  v5Context?: import('../lib/v5/contextualPhysics').V5Context;
+
   // V4 Library & Preset Extensions
   v4LibraryFavorites?: string[];
   v4RecentlyUsed?: string[];
