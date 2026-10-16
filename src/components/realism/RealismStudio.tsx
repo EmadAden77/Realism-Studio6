@@ -1,13 +1,9 @@
-import { V7PhysicalCalibrationPanel } from './V7PhysicalCalibrationPanel';
-import { V6ReferenceMemory } from './V6ReferenceMemory';
-import { V6PoseLightingPanel } from './V6PoseLightingPanel';
-import { V6LocalStudio } from './V6LocalStudio';
+import {StudioOptionsOrganizer} from './StudioOptionsOrganizer';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ContextualPhysicsPanel } from './ContextualPhysicsPanel';
 import React, { useState } from 'react';
 import {
   ShieldCheck,
@@ -65,7 +61,7 @@ export const RealismStudio: React.FC = () => {
             </div>
             <div>
               <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <span>ذكاء المشهد ومطابقة المرجع V3.0</span>
+                <span>استوديو الواقعية والتحكم المتقدم</span>
                 <span className="text-[10px] text-amber-400 font-mono bg-neutral-950 px-2 py-0.5 rounded border border-neutral-800" dir="ltr">
                   Scene Intelligence & Fidelity Engine
                 </span>
@@ -393,11 +389,7 @@ export const RealismStudio: React.FC = () => {
         </>
       )}
 
-      <ContextualPhysicsPanel />
-      <V6LocalStudio />
-      <V6PoseLightingPanel />
-      <V6ReferenceMemory />
-      <V7PhysicalCalibrationPanel />
+      <StudioOptionsOrganizer />
 
       {/* V3 Modals */}
       <DifferentialEditorModal
