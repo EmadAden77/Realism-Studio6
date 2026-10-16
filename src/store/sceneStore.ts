@@ -315,7 +315,7 @@ export function useSceneStore() {
   }, []);
 
   // Generate Prompt
-  const [isRefiningPrompt, setIsRefiningPrompt] = useState(false);
+  const [isRefiningPrompt] = useState(false);
 
   const generatePrompt = useCallback(async (withAiRefinement = false) => {
     // 1. Generate local deterministic prompt first
