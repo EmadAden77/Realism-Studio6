@@ -141,8 +141,12 @@ export function buildClothingAndFabricPrompt(state: SceneState): string {
   const lowerDesc = clothing.lower.nameEn;
   parts.push(`attire: ${upperDesc} in ${clothing.upper.colorEn} and ${lowerDesc} in ${clothing.lower.colorEn}`);
 
+  if (clothing.outer) {
+    parts.push(`outer layer: ${clothing.outer.nameEn} in ${clothing.outer.colorEn}, worn over the upper garment with physically plausible overlap, separate hems and fabric contact shadows`);
+  }
+
   if (clothing.footwear && clothing.footwear.id !== 'footwear_barefoot') {
-    parts.push(`footwear: ${clothing.footwear.nameEn}`);
+    parts.push(`footwear: ${clothing.footwear.nameEn} in ${clothing.footwear.colorEn}`);
   } else if (clothing.footwear?.id === 'footwear_barefoot') {
     parts.push('barefoot');
   }
@@ -170,7 +174,9 @@ export function buildPosePrompt(state: SceneState): string {
   }
 
   parts.push(`free hand: ${pose.freeHand.replace(/_/g, ' ')}`);
-  parts.push(`handheld selfie arm distance approx ${pose.selfieArmDistanceCm}cm, natural clavicle and shoulder biomechanics`);
+  if (state.camera.mode === 'front_selfie' || state.camera.mode === 'rear_main_self_capture') {
+    parts.push(`handheld selfie arm distance approx ${pose.selfieArmDistanceCm}cm, natural clavicle and shoulder biomechanics`);
+  }
 
   return parts.join(', ');
 }
