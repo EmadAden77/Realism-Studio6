@@ -30,3 +30,13 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(163, 163, 163, 0.4);
 }
+
+:root { --studio-bg:#090A0F; --studio-panel:#12151F; --studio-interactive:#1C2030; --studio-border:rgba(255,255,255,.08); --studio-accent:#4dd0e1; }
+body { background:var(--studio-bg); }
+.studio-workspace { width:100%;max-width:1600px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:16px; }
+.studio-panel { background:var(--studio-panel);border:1px solid var(--studio-border);border-radius:16px;box-shadow:0 12px 42px rgba(0,0,0,.13); }
+.studio-metric {display:flex;flex-direction:column;gap:3px;background:var(--studio-interactive);border:1px solid var(--studio-border);border-radius:10px;padding:10px;}
+.studio-metric span {color:#99a3b8;font-size:10px;}
+.studio-metric strong {color:#e8eefb;font-size:13px;font-weight:600;}
+@media(min-width:1280px){.studio-workspace {grid-template-columns:minmax(0,1fr) minmax(290px,350px);align-items:start;}}
+@media(prefers-reduced-motion:reduce){.studio-workspace *, .studio-workspace *::before,.studio-workspace *::after {animation-duration:.01ms!important;transition-duration:.01ms!important;}}
