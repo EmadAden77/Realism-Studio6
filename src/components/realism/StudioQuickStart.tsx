@@ -1,3 +1,6 @@
+import {HAIR_PHYSICS_MATRIX} from '../../lib/physics/hairPhysicsMatrix';
+import {ALL_SHIRT_PANTS_SETS,applyShirtPantsSet} from '../../lib/presets/shirtPantsSets';
+import {NIGHT_LAPTOP_SELFIE_RULES} from '../../lib/physics/nightLaptopSelfie';
 import React,{useMemo,useState} from 'react';
 import {Camera,Home,Moon,Monitor,Copy,Check,ShieldCheck} from 'lucide-react';
 import {useSceneStore} from '../../store/sceneStore';
@@ -56,6 +59,38 @@ export function StudioQuickStart(){
     </select>
    </label>
   </div>
+  <section className="grid grid-cols-1 sm:grid-cols-2 gap-3 border-t border-neutral-800 pt-3" aria-label="الملابس والشعر والوضعية">
+   <label className="text-xs text-neutral-300">طقم القميص والبنطلون
+    <select value={ALL_SHIRT_PANTS_SETS.some(x=>x.id===state.clothing.activeOutfitPresetId)?state.clothing.activeOutfitPresetId:''}
+     onChange={e=>{const outfit=ALL_SHIRT_PANTS_SETS.find(x=>x.id===e.target.value);if(outfit)updateGlobalSceneState(prev=>applyShirtPantsSet(prev,outfit));setCopied(false);}}
+     className="w-full block mt-1 bg-neutral-950 border border-neutral-700 rounded-lg p-3">
+     <option value="">الملابس الحالية (يمكن تعديلها من الخزانة)</option>
+     {ALL_SHIRT_PANTS_SETS.map(x=><option key={x.id} value={x.id}>{x.label}</option>)}
+    </select>
+   </label>
+   <label className="text-xs text-neutral-300">تسريحة الشعر
+    <select value={state.hair.selectedPhysicsStyleId||'hair_ref_exact'}
+     onChange={e=>{updateGlobalSceneState(prev=>({...prev,hair:{...prev.hair,selectedPhysicsStyleId:e.target.value,densityLock:true,preventArtificialThickening:true}}));setCopied(false);}}
+     className="w-full block mt-1 bg-neutral-950 border border-neutral-700 rounded-lg p-3">
+     {HAIR_PHYSICS_MATRIX.styles.map(x=><option key={x.id} value={x.id}>{x.label}</option>)}
+    </select>
+   </label>
+   <label className="text-xs text-neutral-300">الوضعية
+    <select value={state.nightLaptopPoseId||''}
+     onChange={e=>{updateGlobalSceneState(prev=>e.target.value?applyNightLaptopPose(prev,e.target.value):({...prev,nightLaptopPoseId:undefined}));setCopied(false);}}
+     className="w-full block mt-1 bg-neutral-950 border border-neutral-700 rounded-lg p-3">
+     <option value="">الوضعية الحالية (الأدوات المتقدمة)</option>
+     {NIGHT_LAPTOP_SELFIE_RULES.poses.map(x=><option key={x.id} value={x.id}>{x.nameAr}</option>)}
+    </select>
+   </label>
+   <label className="text-xs text-neutral-300">جوانب الشعر
+    <select value={state.hair.selectedSideId||'side_ref'}
+     onChange={e=>{updateGlobalSceneState(prev=>({...prev,hair:{...prev.hair,selectedSideId:e.target.value,densityLock:true,preventArtificialThickening:true}}));setCopied(false);}}
+     className="w-full block mt-1 bg-neutral-950 border border-neutral-700 rounded-lg p-3">
+     {HAIR_PHYSICS_MATRIX.sides.map(x=><option key={x.id} value={x.id}>{x.label}</option>)}
+    </select>
+   </label>
+  </section>
   <div className="space-y-2 border-t border-neutral-800 pt-3">
    <div className="flex justify-between items-center gap-2"><h3 className="text-xs font-bold text-white">البرومبت المباشر</h3>
     <div className="flex gap-1 rounded-lg border border-neutral-700 p-1">
