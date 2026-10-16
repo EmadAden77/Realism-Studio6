@@ -1,3 +1,4 @@
+import {compileSelectedHair} from '../physics/hairPhysicsMatrix';
 import {compileDomesticPrompt} from '../domestic/domesticOptions';
 import {resolvePhysicsState,compileMechanicalPrompt} from '../physics/PhysicsEngine';
 import { buildV7CalibrationPrompt } from '../v7/physicalCalibration';
@@ -409,6 +410,7 @@ export function assembleMasterPrompt(input: SceneState): { englishPrompt: string
     buildExpressionAndGazePrompt(state),
     buildHairPrompt(state),
     buildDynamicHairPrompt(state),
+    compileSelectedHair(state),
     buildFacialHairPrompt(state),
     buildClothingAndFabricPrompt(state),
     buildDynamicFabricPrompt(state),
