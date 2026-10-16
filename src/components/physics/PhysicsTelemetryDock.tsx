@@ -1,7 +1,7 @@
 import React, {useMemo,useState} from 'react';
 import {Activity,ShieldCheck,Copy,ChevronDown,LockKeyhole,AlertTriangle} from 'lucide-react';
 import {useSceneStore} from '../../store/sceneStore';
-import {getActivePhysicsLocks,calculateIntegrity,opticalDiagnostics,lightDiagnostics,resolvePhysicsState,compileMechanicalPrompt} from '../../lib/physics/PhysicsEngine';
+import {getActivePhysicsLocks,calculateIntegrity,opticalDiagnostics,lightDiagnostics} from '../../lib/physics/PhysicsEngine';
 import {assembleMasterPrompt} from '../../lib/prompt/promptBuilder';
 export function PhysicsTelemetryDock(){
  const {state}=useSceneStore();
