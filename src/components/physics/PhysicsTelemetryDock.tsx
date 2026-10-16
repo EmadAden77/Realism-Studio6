@@ -17,7 +17,7 @@ export function PhysicsTelemetryDock(){
  const localPrompt=useMemo(()=>compileLocalPhysicsPrompt(state),[state]);
  const [outputMode,setOutputMode]=useState<'master'|'local'>('master');
  const textOutput=outputMode==='local'?localPrompt:compiled.englishPrompt+'\n\nNEGATIVE PROMPT:\n'+compiled.negativePrompt;
- const copy=async()=>{try{await navigator.clipboard.writeText(compiled.englishPrompt+'\n\nNEGATIVE PROMPT:\n'+compiled.negativePrompt);setNotice('تم نسخ البرومبت');}catch{setNotice('تعذّر النسخ، يمكنك تحديد النص يدويًا.');}};
+ const copy=async()=>{try{await navigator.clipboard.writeText(textOutput);setNotice('تم نسخ البرومبت');}catch{setNotice('تعذّر النسخ، يمكنك تحديد النص يدويًا.');}};
  return <aside dir="rtl" aria-label="لوحة مراقبة الفيزياء" className="studio-panel text-sm p-4 space-y-4 xl:sticky xl:top-20 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
   <header className="flex items-center gap-2 border-b border-white/10 pb-3">
    <Activity className="w-4 h-4 text-cyan-400"/><h2 className="font-bold">Live Physics Telemetry</h2>
@@ -59,7 +59,7 @@ export function PhysicsTelemetryDock(){
    <button type="button" aria-expanded={showOutput} onClick={()=>setShowOutput(!showOutput)} className="flex items-center justify-between w-full p-2 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold">
     <span>Compiled Master Prompt</span><ChevronDown className={'w-4 h-4 transition-transform '+(showOutput?'rotate-180':'')}/>
    </button>
-   {showOutput&&<textarea dir="ltr" readOnly aria-label="البرومبت الكامل" value={compiled.englishPrompt+'\n\nNEGATIVE PROMPT:\n'+compiled.negativePrompt} rows={12} className="w-full rounded-lg bg-black/40 text-xs font-mono p-2 border border-white/10 leading-relaxed"/>}
+   {showOutput&&<textarea dir="ltr" readOnly aria-label="البرومبت الكامل" value={textOutput} rows={12} className="w-full rounded-lg bg-black/40 text-xs font-mono p-2 border border-white/10 leading-relaxed"/>}
    <button onClick={copy} type="button" className="w-full p-3 min-h-11 rounded-lg bg-cyan-500 text-slate-950 font-bold flex items-center justify-center gap-2"><Copy className="w-4 h-4"/> نسخ البرومبت النهائي</button>
    {notice&&<p role="status" className="text-emerald-300 text-xs">{notice}</p>}
   </section>
