@@ -32,6 +32,11 @@ export function buildPhotographicImperfectionsPrompt(state: SceneState): string 
     );
   }
 
+  parts.push('single consistent smartphone camera processing across face, hands, clothing and room: no isolated face enhancement, no synthetic pore overlay, no waxy skin smoothing or artificial HDR face relighting');
+  if (lighting.mode === 'phone_screen_only') {
+    parts.push('facial and torso exposure obey the same weak-screen illumination; no bright lower torso caused by automatic portrait retouching');
+  }
+
   if (config.slightOpticalAberration) {
     parts.push(
       'mild wide-angle edge chromatic dispersion and subtle corner falloff characteristic of compact smartphone optics'
