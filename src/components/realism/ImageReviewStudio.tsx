@@ -1,3 +1,4 @@
+import { apiUrl } from '../../lib/ai/apiClient';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -55,7 +56,7 @@ export const ImageReviewStudio: React.FC = () => {
 
         try {
           // Attempt backend multimodal AI analysis via /api/review-image
-          const res = await fetch('/api/review-image', {
+          const res = await fetch(apiUrl('review-image'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
