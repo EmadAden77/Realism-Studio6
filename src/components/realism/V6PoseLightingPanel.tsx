@@ -1,3 +1,4 @@
+import {constraintById} from '../../lib/physics/UIConstraints';
 import React, {useState} from 'react';
 import {useSceneStore} from '../../store/sceneStore';
 import type {CameraAngle, LightingMode} from '../../types/scene';
@@ -19,6 +20,8 @@ const lights:{value:LightingMode;label:string}[]=[
 export function V6PoseLightingPanel(){
  const {state,updateGlobalSceneState}=useSceneStore();
  const [notes,setNotes]=useState('');
+ const screenLock=constraintById(state,'secondary_light');
+ const reachLock=constraintById(state,'selfie_overreach');
  const patchPose=(patch:Partial<typeof state.pose>)=>updateGlobalSceneState(prev=>({...prev,pose:{...prev.pose,...patch}}));
  const patchCamera=(patch:Partial<typeof state.camera>)=>updateGlobalSceneState(prev=>({...prev,camera:{...prev.camera,...patch}}));
  const setLighting=(mode:LightingMode)=>updateGlobalSceneState(prev=>({
@@ -63,6 +66,15 @@ export function V6PoseLightingPanel(){
     {!lights.some(l=>l.value===state.lighting.mode)&&<option value={state.lighting.mode}>{state.lighting.mode.replaceAll('_',' ')}</option>}
    </select>
   </label>
+  <div className="rounded-xl border border-neutral-700 p-3 bg-neutral-950/60 space-y-2">
+   <label className="flex items-center gap-2 text-xs">
+    <input type="checkbox" checked={state.lighting.secondarySourceEnabled} disabled={screenLock.disabled} title={screenLock.disabled?screenLock.reasonAr:undefined}
+     onChange={e=>updateGlobalSceneState(prev=>({...prev,lighting:{...prev.lighting,secondarySourceEnabled:e.target.checked}}))} className="accent-amber-400"/>
+    مصدر ضوء ثانوي
+   </label>
+   {screenLock.disabled&&<p role="note" className="text-xs text-amber-300">🔒 {screenLock.reasonAr}</p>}
+   {reachLock.disabled&&<p className="text-[11px] text-neutral-400" title={reachLock.reasonAr}>قفل مدى الذراع: 30–75 سم للكاميرا الأمامية</p>}
+  </div>
   <label className="block text-xs space-y-1">وصف الحركة الخاصة
    <textarea value={notes} onChange={e=>setNotes(e.target.value)} maxLength={500} rows={2} placeholder="مثال: يميل قليلًا للأمام أثناء تعديل طرف الكم" className="w-full p-2 rounded-lg bg-neutral-950 border border-neutral-700"/>
   </label>
