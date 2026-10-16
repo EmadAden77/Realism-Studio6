@@ -1,3 +1,4 @@
+import {RealWardrobeCatalog} from './RealWardrobeCatalog';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -399,6 +400,7 @@ export const EnvironmentStudio: React.FC = () => {
       {/* 5. CLOTHING & FABRIC PHYSICS SUB-TAB */}
       {subTab === 'clothing' && (
         <div className="space-y-4">
+          <RealWardrobeCatalog />
           <section className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-4">
             <h3 className="text-sm font-bold text-white mb-1 flex items-center gap-2">
               <span>أطقم الملابس الجاهزة</span>
