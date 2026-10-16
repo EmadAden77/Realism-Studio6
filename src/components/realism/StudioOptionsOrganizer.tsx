@@ -1,3 +1,4 @@
+import {NightLaptopSelfiePanel} from './NightLaptopSelfiePanel';
 import {HairPhysicsPanel} from './HairPhysicsPanel';
 import {DomesticSelfieStudio} from './DomesticSelfieStudio';
 import React, {useEffect,useState} from 'react';
@@ -9,6 +10,7 @@ import {V6ReferenceMemory} from './V6ReferenceMemory';
 import {V7PhysicalCalibrationPanel} from './V7PhysicalCalibrationPanel';
 
 const groups=[
+ {id:'nightLaptop',title:'سيلفي اللابتوب الليلي',description:'20 وضعية مع فيزياء اللابتوب وإضاءته',tags:'لابتوب ماك بوك غرفة نوم ليل مكتب سيلفي',Component:NightLaptopSelfiePanel},
  {id:'hair',title:'01 · تسريحات الشعر الفيزيائية',description:'التسريحات والجوانب مع قفل الكثافة المرجعية',tags:'شعر تسريحة جوانب كثافة مرجع',Component:HairPhysicsPanel},
  {id:'domestic',title:'00 · المنزل والسيلفي',description:'أماكن منزلية وزوايا وحركات يومية واقعية',tags:'منزل غرفة مرآة زاوية حركة جلسة إضاءة',Component:DomesticSelfieStudio},
  {id:'essential',title:'01 · المشهد والكاميرا',description:'الوضعية، زاوية السيلفي ومسافة التصوير',tags:'سيلفي كاميرا زاوية وضعية مسافة إضاءة',Component:V6PoseLightingPanel},
