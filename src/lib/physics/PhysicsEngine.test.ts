@@ -1,7 +1,7 @@
 import {describe,it} from 'node:test';
 import assert from 'node:assert/strict';
 import {INITIAL_SCENE_STATE} from '../presets/data';
-import {PHYSICS_RULES_MATRIX,resolvePhysicsState,calculateIntegrity,opticalDiagnostics,compileMechanicalPrompt} from './PhysicsEngine';
+import {PHYSICS_RULES_MATRIX,resolvePhysicsState,calculateIntegrity,opticalDiagnostics,compileMechanicalPrompt,compileMaterialContactPrompt} from './PhysicsEngine';
 
 describe('Deterministic physics constraints',()=>{
  it('keeps unique, priority ordered constraints',()=>{
@@ -33,6 +33,16 @@ describe('Deterministic physics constraints',()=>{
   const d=opticalDiagnostics(resolvePhysicsState(INITIAL_SCENE_STATE).state);
   assert.ok(Number.isFinite(d.nearCm));
   assert.ok(d.nearCm>0);
+ });
+ it('uses posture-specific textile contact instead of detached random folds',()=>{
+  const scene={...INITIAL_SCENE_STATE,pose:{...INITIAL_SCENE_STATE.pose,category:'sitting' as const,supportSurface:'chair' as const}};
+  const text=compileMaterialContactPrompt(scene);
+  assert.match(text,/compressed beneath hips and thighs/);
+  assert.match(text,/upper garment/);
+ });
+ it('preserves fabric response during recline',()=>{
+  const scene={...INITIAL_SCENE_STATE,pose:{...INITIAL_SCENE_STATE.pose,category:'reclining' as const,supportSurface:'bed_mattress' as const}};
+  assert.match(compileMaterialContactPrompt(scene),/mattress contacts/);
  });
  it('is idempotent',()=>{
   const first=resolvePhysicsState(INITIAL_SCENE_STATE).state;
