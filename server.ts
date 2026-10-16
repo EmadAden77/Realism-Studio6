@@ -15,9 +15,35 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT || 3000);
+const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
-app.use(express.json({ limit: '10mb' }));
+app.disable('x-powered-by');
+app.use(express.json({ limit: '8mb' }));
+// Credentials stay server-side. Requests from untrusted browser origins are rejected.
+// This is not authentication; production deployments also need provider quotas / abuse monitoring.
+const allowedOrigins = new Set(
+  (process.env.ALLOWED_ORIGINS || 'https://emadaden77.github.io').split(',')
+    .map(v => v.trim()).filter(Boolean)
+);
+app.use('/api', (req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && !allowedOrigins.has(origin) && !origin.endsWith('.vercel.app')) {
+    return res.status(403).json({ error: 'Origin not allowed' });
+  }
+  if (origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS, GET');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  next();
+});
+app.get('/api/health', (_req, res) => res.json({
+  status: 'ok', geminiConfigured: Boolean(apiKey), provider: 'gemini'
+}));
 
 // Initialize GoogleGenAI SDK server-side
 const apiKey = process.env.GEMINI_API_KEY;
@@ -37,9 +63,9 @@ if (apiKey) {
 // 1. POST /api/analyze-scene - AI-powered Arabic scene analyzer
 app.post('/api/analyze-scene', async (req, res) => {
   try {
-    const { description, currentScene } = req.body;
+    const { description } = req.body || {};
 
-    if (!description || typeof description !== 'string') {
+    if (!description || typeof description !== 'string' || description.length > 6000) {
       return res.status(400).json({ error: 'Description is required' });
     }
 
@@ -69,7 +95,7 @@ Extract and map to realistic values:
 - disorderLevel: integer from 0 to 4 (default 2)`;
 
     const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+      model: MODEL,
       contents: promptText,
       config: {
         systemInstruction,
@@ -118,9 +144,9 @@ Extract and map to realistic values:
 // 2. POST /api/refine-prompt - Coherent English prompt refiner
 app.post('/api/refine-prompt', async (req, res) => {
   try {
-    const { rawPrompt, negativePrompt, sceneSummary } = req.body;
+    const { rawPrompt, negativePrompt, sceneSummary } = req.body || {};
 
-    if (!rawPrompt) {
+    if (typeof rawPrompt !== 'string' || !rawPrompt.trim() || rawPrompt.length > 30000 || (negativePrompt && (typeof negativePrompt !== 'string' || negativePrompt.length > 15000))) {
       return res.status(400).json({ error: 'Raw prompt is required' });
     }
 
@@ -151,7 +177,7 @@ Current Negative Prompt:
 Refine both for maximum physical grounding and photographic realism without altering locked specifications.`;
 
     const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+      model: MODEL,
       contents: promptText,
       config: {
         systemInstruction,
@@ -187,9 +213,9 @@ Refine both for maximum physical grounding and photographic realism without alte
 // 3. POST /api/review-image - Generated Image Realism Review Engine
 app.post('/api/review-image', async (req, res) => {
   try {
-    const { imageBase64, currentScene } = req.body;
+    const { imageBase64, currentScene } = req.body || {};
 
-    if (!imageBase64) {
+    if (typeof imageBase64 !== 'string' || !/^data:image\/(png|jpeg|webp);base64,/.test(imageBase64) || imageBase64.length > 7_000_000) {
       return res.status(400).json({ error: 'Image data is required' });
     }
 
@@ -214,13 +240,13 @@ Return JSON adhering to schema with specific review items and targeted prompt co
     const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '');
 
     const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+      model: MODEL,
       contents: {
         parts: [
           {
             inlineData: {
               data: base64Data,
-              mimeType: 'image/jpeg'
+              mimeType: imageBase64.match(/^data:(image\/(?:png|jpeg|webp));base64,/)?.[1] || 'image/jpeg'
             }
           },
           {
@@ -281,9 +307,9 @@ Return JSON adhering to schema with specific review items and targeted prompt co
 // 4. POST /api/analyze-reference - V3 Reference Fidelity Analyzer
 app.post('/api/analyze-reference', async (req, res) => {
   try {
-    const { referenceImageUrl, referenceImageName, options } = req.body;
+    const { referenceImageUrl } = req.body || {};
 
-    if (!referenceImageUrl) {
+    if (typeof referenceImageUrl !== 'string' || !/^data:image\/(png|jpeg|webp);base64,/.test(referenceImageUrl) || referenceImageUrl.length > 7_000_000) {
       return res.status(400).json({ error: 'referenceImageUrl is required' });
     }
 
@@ -307,13 +333,13 @@ Your mandate is the HONEST OBSERVATION PRINCIPLE:
       : referenceImageUrl;
 
     const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+      model: MODEL,
       contents: {
         parts: [
           {
             inlineData: {
               data: cleanBase64,
-              mimeType: 'image/jpeg'
+              mimeType: referenceImageUrl.match(/^data:(image\/(?:png|jpeg|webp));base64,/)?.[1] || 'image/jpeg'
             }
           },
           {
@@ -412,4 +438,6 @@ async function setupViteServer() {
   });
 }
 
-setupViteServer();
+if (!process.env.VERCEL) setupViteServer();
+
+export default app;
