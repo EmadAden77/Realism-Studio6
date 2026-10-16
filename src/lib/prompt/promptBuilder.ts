@@ -1,3 +1,4 @@
+import {compileNightLaptopPrompt} from '../physics/nightLaptopSelfie';
 import {compileSelectedHair} from '../physics/hairPhysicsMatrix';
 import {compileDomesticPrompt} from '../domestic/domesticOptions';
 import {resolvePhysicsState,compileMechanicalPrompt} from '../physics/PhysicsEngine';
@@ -427,7 +428,8 @@ export function assembleMasterPrompt(input: SceneState): { englishPrompt: string
     buildV5Prompt(state),
     buildV7CalibrationPrompt(state),
     compileMechanicalPrompt(state),
-    compileDomesticPrompt(state)
+    compileDomesticPrompt(state),
+    compileNightLaptopPrompt(state)
   ];
 
   // Join sections cleanly with period separation for modern diffusion engines
