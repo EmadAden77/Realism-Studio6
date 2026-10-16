@@ -5,7 +5,7 @@ type Note={id:string;label:string;kind:'identity'|'environment';details:string;}
 const KEY='realism_studio_v6_reference_notes';
 function load():Note[]{try{const v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v.filter(x=>typeof x.details==='string'&&typeof x.label==='string'):[];}catch{return []}}
 export function V6ReferenceMemory(){
- const {state,updateGlobalSceneState}=useSceneStore();
+ const {updateGlobalSceneState}=useSceneStore();
  const [items,setItems]=useState<Note[]>(load);
  const [label,setLabel]=useState('');
  const [kind,setKind]=useState<Note['kind']>('environment');
