@@ -1,3 +1,4 @@
+import { V6PoseLightingPanel } from './V6PoseLightingPanel';
 import { V6LocalStudio } from './V6LocalStudio';
 /**
  * @license
@@ -392,6 +393,7 @@ export const RealismStudio: React.FC = () => {
 
       <ContextualPhysicsPanel />
       <V6LocalStudio />
+      <V6PoseLightingPanel />
 
       {/* V3 Modals */}
       <DifferentialEditorModal
