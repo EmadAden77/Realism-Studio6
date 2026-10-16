@@ -1,3 +1,4 @@
+import {compileLocalPhysicsPrompt} from '../../lib/prompt/localPhysicsCompiler';
 import React, {useMemo,useState} from 'react';
 import {Activity,ShieldCheck,Copy,ChevronDown,LockKeyhole,AlertTriangle} from 'lucide-react';
 import {useSceneStore,getLastPhysicsCorrections} from '../../store/sceneStore';
@@ -13,6 +14,9 @@ export function PhysicsTelemetryDock(){
  const optics=opticalDiagnostics(state);
  const light=lightDiagnostics(state);
  const compiled=useMemo(()=>assembleMasterPrompt(state),[state]);
+ const localPrompt=useMemo(()=>compileLocalPhysicsPrompt(state),[state]);
+ const [outputMode,setOutputMode]=useState<'master'|'local'>('master');
+ const textOutput=outputMode==='local'?localPrompt:compiled.englishPrompt+'\n\nNEGATIVE PROMPT:\n'+compiled.negativePrompt;
  const copy=async()=>{try{await navigator.clipboard.writeText(compiled.englishPrompt+'\n\nNEGATIVE PROMPT:\n'+compiled.negativePrompt);setNotice('تم نسخ البرومبت');}catch{setNotice('تعذّر النسخ، يمكنك تحديد النص يدويًا.');}};
  return <aside dir="rtl" aria-label="لوحة مراقبة الفيزياء" className="studio-panel text-sm p-4 space-y-4 xl:sticky xl:top-20 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
   <header className="flex items-center gap-2 border-b border-white/10 pb-3">
@@ -47,6 +51,11 @@ export function PhysicsTelemetryDock(){
    </div>)}</div>
   </section>
   <section className="space-y-2">
+   <div className="grid grid-cols-2 gap-2" role="group" aria-label="نوع البرومبت">
+    <button type="button" aria-pressed={outputMode==='master'} onClick={()=>setOutputMode('master')} className={'rounded-lg p-2 border text-xs '+(outputMode==='master'?'border-cyan-400 text-cyan-200':'border-neutral-700')}>Master كامل</button>
+    <button type="button" aria-pressed={outputMode==='local'} onClick={()=>setOutputMode('local')} className={'rounded-lg p-2 border text-xs '+(outputMode==='local'?'border-cyan-400 text-cyan-200':'border-neutral-700')}>Local بدون API</button>
+   </div>
+   <p className="text-[11px] text-neutral-400">الوضع المحلي يولّد وصفًا مختصرًا بالكامل داخل المتصفح. لا يرسل النص أو الصورة إلى خدمة خارجية.</p>
    <button type="button" aria-expanded={showOutput} onClick={()=>setShowOutput(!showOutput)} className="flex items-center justify-between w-full p-2 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold">
     <span>Compiled Master Prompt</span><ChevronDown className={'w-4 h-4 transition-transform '+(showOutput?'rotate-180':'')}/>
    </button>
