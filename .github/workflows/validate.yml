@@ -18,4 +18,5 @@ jobs:
       - run: bun test src/lib/physics/PhysicsEngine.test.ts src/lib/physics/UIConstraints.test.ts src/lib/physics/SceneIntegration.test.ts src/lib/domestic/domesticOptions.test.ts
       - run: bun test src/lib/physics/ShirtPantsSets.test.ts
       - run: bun test src/lib/physics/hairPhysicsMatrix.test.ts
+      - run: bun test src/lib/prompt/localPhysicsCompiler.test.ts
       - run: bun run build
