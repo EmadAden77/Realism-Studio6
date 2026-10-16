@@ -582,6 +582,7 @@ export interface SceneState {
   descriptionInput: string;
   environmentCategory: EnvironmentCategory;
   locationPresetId: string;
+  nightLaptopPoseId?: string;
   domesticSelection?: import('../lib/domestic/domesticOptions').DomesticSelection;
   
   identity: IdentityState;
