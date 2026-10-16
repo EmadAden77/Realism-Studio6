@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { buildV5Prompt, buildV5Negative } from '../v5/contextualPhysics';
 import type { SceneState } from '../../types/scene.ts';
 import {
   EXPRESSION_PRESETS,
@@ -297,7 +298,7 @@ export function buildNegativePrompt(state: SceneState): string {
     ...buildExaggerationReductionNegativeTokens()
   ];
 
-  const combined = Array.from(new Set([...baseTokens, ...v2NegativeTokens]));
+  const combined = Array.from(new Set([...baseTokens, ...v2NegativeTokens, ...buildV5Negative(state).split(', ').filter(Boolean)]));
 
   if (state.lighting.mode === 'phone_screen_only') {
     combined.push(
@@ -407,7 +408,8 @@ export function assembleMasterPrompt(state: SceneState): { englishPrompt: string
     buildCloseRangeOpticsPrompt(state),
     buildMaterialResponsePrompt(state),
     buildPhotographicImperfectionsPrompt(state),
-    buildUnifiedImagingPrompt(state)
+    buildUnifiedImagingPrompt(state),
+    buildV5Prompt(state)
   ];
 
   // Join sections cleanly with period separation for modern diffusion engines
