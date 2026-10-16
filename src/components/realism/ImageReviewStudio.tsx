@@ -1,3 +1,4 @@
+import { V6ManualImageReview } from './V6ManualImageReview';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -97,6 +98,8 @@ export const ImageReviewStudio: React.FC = () => {
           <strong className="text-amber-300">ملاحظة تقنية هامة:</strong> هذا فحص قواعد محلي دون نموذج رؤية، ولا يستطيع اكتشاف أخطاء البكسلات أو التأكد من تطابق الوجه. ينتج إرشادات عامة اعتمادًا على إعدادات المشهد فقط.
         </div>
       </section>
+
+      <V6ManualImageReview />
 
       {/* 2. Upload Box */}
       <section className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-4 sm:p-5">
