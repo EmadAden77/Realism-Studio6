@@ -66,6 +66,7 @@ const reflections: Record<ReflectionMode,string> = {
 export function buildV5Prompt(state: SceneState): string {
   const v=getV5(state);
   const clauses=[
+    v.promptLength === 'concise' ? 'prefer compact, non-redundant wording while retaining identity and lighting requirements' : v.promptLength === 'detailed' ? 'articulate concrete physical contact, optics and material relationships explicitly without inventing unseen details' : 'use balanced, non-repetitive photographic description',
     actions[v.handAction],
     climates[v.climate],
     reflections[v.reflection],
