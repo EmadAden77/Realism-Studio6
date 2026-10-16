@@ -53,36 +53,6 @@ export const ImageReviewStudio: React.FC = () => {
           isAnalyzing: true
         }));
 
-        try {
-          // Attempt backend multimodal AI analysis via /api/review-image
-          const res = await fetch('/api/review-image', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              imageBase64: url,
-              currentScene: state
-            })
-          });
-
-          const data = await res.json();
-          if (!data.fallback && data.data) {
-            const aiReview: ImageReviewState = {
-              uploadedImageUrl: url,
-              uploadedImageName: file.name,
-              isAnalyzing: false,
-              analysisCompleted: true,
-              reviewItems: data.data.reviewItems || [],
-              overallRealismAssessmentAr: data.data.overallAssessmentAr || 'تم تدقيق الصورة بنجاح بواسطة الذكاء الاصطناعي',
-              targetedEditInstructionsEn: data.data.targetedEditInstructionsEn || ''
-            };
-            setReviewState(aiReview);
-            updateGlobalSceneState((prev) => ({ ...prev, imageReview: aiReview }));
-            return;
-          }
-        } catch {
-          // Fallback to local rule-based evaluation
-        }
-
         // Local deterministic evaluation
         const localReview = evaluateGeneratedImageLocally(url, state);
         setReviewState(localReview);
@@ -117,14 +87,14 @@ export const ImageReviewStudio: React.FC = () => {
                 </span>
               </h2>
               <p className="text-xs text-neutral-400 mt-0.5">
-                مقارنة الصورة التي قمت بتوليدها مع القواعد الفيزيائية وأقفال الهوية لاكتشاف أي شذوذ بصري أو تجميل زائف
+                مراجعة إرشادية محلية لقواعد المشهد، وليست تحليلاً بصريًا آليًا للصورة أو إثباتًا لمطابقة الهوية
               </p>
             </div>
           </div>
         </div>
 
         <div className="p-3 bg-neutral-950 rounded-xl border border-neutral-800 text-[11px] text-neutral-400 leading-relaxed mt-3">
-          <strong className="text-amber-300">ملاحظة تقنية هامة:</strong> هذا الفحص تدقيق بصري فيزيائي يحدد مواضع الخلل في الصورة المولدة (مثل استطالة الذراع أو لمعان البلاستيك أو الإضاءة الزائفة) ويقترح تعديلات دقيقة على البرومبت دون إعادة بناء المشهد من الصفر.
+          <strong className="text-amber-300">ملاحظة تقنية هامة:</strong> هذا فحص قواعد محلي دون نموذج رؤية، ولا يستطيع اكتشاف أخطاء البكسلات أو التأكد من تطابق الوجه. ينتج إرشادات عامة اعتمادًا على إعدادات المشهد فقط.
         </div>
       </section>
 
