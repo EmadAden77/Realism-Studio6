@@ -1,3 +1,4 @@
+import {ShirtPantsSetsPanel} from './ShirtPantsSetsPanel';
 import {constraintById} from '../../lib/physics/UIConstraints';
 import {RealWardrobeCatalog} from './RealWardrobeCatalog';
 /**
@@ -420,6 +421,7 @@ export const EnvironmentStudio: React.FC = () => {
       {/* 5. CLOTHING & FABRIC PHYSICS SUB-TAB */}
       {subTab === 'clothing' && (
         <div className="space-y-4">
+          <ShirtPantsSetsPanel />
           <RealWardrobeCatalog />
           <section className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-4">
             <h3 className="text-sm font-bold text-white mb-1 flex items-center gap-2">
