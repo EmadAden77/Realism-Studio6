@@ -92,7 +92,7 @@ export type ClothingGroup =
 export type GarmentFit = 'slim' | 'regular' | 'relaxed' | 'loose';
 export type GarmentThickness = 'thin' | 'medium' | 'thick';
 export type GarmentSurface = 'matte' | 'slightly_textured' | 'mild_sheen';
-export type GarmentWearState = 'freshly_worn' | 'naturally_used' | 'slightly_wrinkled' | 'after_activity';
+export type GarmentWearState = 'freshly_worn' | 'naturally_used' | 'slightly_wrinkled' | 'after_activity' | 'lived_in' | 'lightly_creased';
 
 export interface V4ClothingPreset {
   id: string;
