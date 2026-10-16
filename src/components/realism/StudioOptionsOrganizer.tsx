@@ -1,6 +1,6 @@
 import {HairPhysicsPanel} from './HairPhysicsPanel';
 import {DomesticSelfieStudio} from './DomesticSelfieStudio';
-import React, {useState} from 'react';
+import React, {useEffect,useState} from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import {ContextualPhysicsPanel} from './ContextualPhysicsPanel';
 import {V6LocalStudio} from './V6LocalStudio';
@@ -20,6 +20,7 @@ const groups=[
 
 export function StudioOptionsOrganizer(){
  const [query,setQuery]=useState('');
+ useEffect(()=>{const onFilter=(event:Event)=>setQuery((event as CustomEvent<string>).detail||'');window.addEventListener('realism-studio-filter',onFilter);return ()=>window.removeEventListener('realism-studio-filter',onFilter);},[]);
  const [opened,setOpened]=useState<string[]>(['essential']);
  const filtered=groups.filter(g=>(g.title+' '+g.description+' '+g.tags).toLowerCase().includes(query.trim().toLowerCase()));
  const toggle=(id:string)=>setOpened(old=>old.includes(id)?old.filter(x=>x!==id):[...old,id]);
