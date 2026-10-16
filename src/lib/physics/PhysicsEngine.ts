@@ -11,7 +11,7 @@ export type PhysicsRule = {
  correct: (scene:SceneState)=>SceneState;
 };
 export type RuleCorrection={id:string;labelAr:string;reasonAr:string};
-export const PHYSICS_RULES_MATRIX:readonly PhysicsRule[]=[
+export const PHYSICS_RULES_MATRIX = ([
  {
   id:'FRONT_OPTICAL_PROFILE',labelAr:'بصريات الكاميرا الأمامية',domain:'optics',priority:10,
   reasonAr:'الكاميرا الأمامية تستخدم المنظور المكافئ 21mm وفتحة f/2.0 مع مستشعر صغير؛ لا تستخدم خصائص العدسة الخلفية.',
@@ -61,7 +61,7 @@ export const PHYSICS_RULES_MATRIX:readonly PhysicsRule[]=[
   conflict:s=>s.pose.supportSurface==='unsupported',
   correct:s=>({...s,pose:{...s.pose,supportSurface:s.environmentCategory==='vehicle'?'car_seat':'bed_mattress'}})
  }
-].sort((a,b)=>a.priority-b.priority);
+] satisfies PhysicsRule[]).sort((a,b)=>a.priority-b.priority);
 
 export function resolvePhysicsState(source:SceneState):{state:SceneState;corrections:RuleCorrection[]}{
  let state=source;
