@@ -1,3 +1,4 @@
+import { buildV7CalibrationPrompt } from '../v7/physicalCalibration';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -409,7 +410,8 @@ export function assembleMasterPrompt(state: SceneState): { englishPrompt: string
     buildMaterialResponsePrompt(state),
     buildPhotographicImperfectionsPrompt(state),
     buildUnifiedImagingPrompt(state),
-    buildV5Prompt(state)
+    buildV5Prompt(state),
+    buildV7CalibrationPrompt(state)
   ];
 
   // Join sections cleanly with period separation for modern diffusion engines
