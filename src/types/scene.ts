@@ -110,6 +110,8 @@ export interface IdentityState {
 }
 
 export interface HairState {
+  selectedPhysicsStyleId?: string;
+  selectedSideId?: string;
   length: 'original' | 'short' | 'medium' | 'custom';
   direction: 'original' | 'forward' | 'side_left' | 'side_right' | 'backward' | 'irregular';
   presetId: string;

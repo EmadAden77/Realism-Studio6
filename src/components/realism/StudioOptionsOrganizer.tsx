@@ -1,3 +1,4 @@
+import {HairPhysicsPanel} from './HairPhysicsPanel';
 import {DomesticSelfieStudio} from './DomesticSelfieStudio';
 import React, {useState} from 'react';
 import { ChevronDown, Search } from 'lucide-react';
@@ -8,6 +9,7 @@ import {V6ReferenceMemory} from './V6ReferenceMemory';
 import {V7PhysicalCalibrationPanel} from './V7PhysicalCalibrationPanel';
 
 const groups=[
+ {id:'hair',title:'01 · تسريحات الشعر الفيزيائية',description:'التسريحات والجوانب مع قفل الكثافة المرجعية',tags:'شعر تسريحة جوانب كثافة مرجع',Component:HairPhysicsPanel},
  {id:'domestic',title:'00 · المنزل والسيلفي',description:'أماكن منزلية وزوايا وحركات يومية واقعية',tags:'منزل غرفة مرآة زاوية حركة جلسة إضاءة',Component:DomesticSelfieStudio},
  {id:'essential',title:'01 · المشهد والكاميرا',description:'الوضعية، زاوية السيلفي ومسافة التصوير',tags:'سيلفي كاميرا زاوية وضعية مسافة إضاءة',Component:V6PoseLightingPanel},
  {id:'physics',title:'02 · فيزياء المشهد',description:'تفاعل اليد والخامات والضوء والعناصر',tags:'ضوء خامات شعر تفاعل فيزياء',Component:ContextualPhysicsPanel},
