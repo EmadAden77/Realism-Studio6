@@ -75,7 +75,7 @@ export function validateDomesticSelection(s:SceneState):string[]{
  const mirror=['ang_mirror_screen','ang_mirror_lens'].includes(v.angle||'');
  const mirrorLocation=v.location==='loc_bathroom_mirror';
  if(mirror&&!mirrorLocation)errors.push('Mirror angles require a known mirror in the selected home location.');
- if(v.action==='act_glasses_fix'&&s.eyewear.mode==='none')errors.push('Cannot adjust glasses when eyewear is disabled.');
+ if(v.action==='act_glasses_fix'&&s.eyewear.mode==='no_glasses')errors.push('Cannot adjust glasses when eyewear is disabled.');
  if(v.pose==='pos_wall_back'||v.pose==='pos_wall_shoulder'){
   if(v.angle==='ang_low_chin'&&v.pose==='pos_wall_shoulder')errors.push('Low seated-style angle conflicts with the standing shoulder-wall pose.');
  }
@@ -108,7 +108,7 @@ export function setDomesticChoice(s:SceneState,category:DomesticCategory,id:stri
   const support:Record<string,SceneState['pose']['supportSurface']>={pos_stand_casual:'ground',pos_wall_back:'wall',pos_wall_shoulder:'wall',pos_slouch:'chair',pos_lean_knees:'chair',pos_floor_arab:'ground',pos_lying_back:'bed_mattress',pos_lying_stomach:'bed_mattress',pos_edge_sit:'bed_mattress',pos_counter_lean:'wall'};
   next={...next,pose:{...next.pose,category:categories[id],supportSurface:support[id]}};
  }
- return next;
+ return validateDomesticSelection(next).length? s : next;
 }
 export function compileDomesticPrompt(s:SceneState):string{
  const v=getDomesticSelection(s),segments:string[]=[];
