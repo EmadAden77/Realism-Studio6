@@ -26,7 +26,7 @@ export function StudioQuickStart(){
   });
  };
  const changeCamera=(modeValue:'front_selfie'|'rear_main_self_capture'|'mirror_selfie'|'third_person_phone')=>{
-  updateGlobalSceneState(prev=>resolvePhysicsState({...prev,nightLaptopPoseId:undefined,domesticSelection:undefined,camera:{...prev.camera,mode:modeValue}}).state);
+  updateGlobalSceneState(prev=>resolvePhysicsState({...prev,nightLaptopPoseId:undefined,domesticSelection:undefined,...(modeValue==='mirror_selfie'?{environmentCategory:'bedroom' as const,locationPresetId:'bedroom_standing_mirror'}:{}),camera:{...prev.camera,mode:modeValue}}).state);
  };
  const changeLighting=(value:'phone_screen_only'|'ceiling_light_only'|'bedside_lamp_only'|'natural_daylight')=>{
   updateGlobalSceneState(prev=>resolvePhysicsState({...prev,nightLaptopPoseId:undefined,domesticSelection:undefined,lighting:{...prev.lighting,mode:value,timeOfDay:value==='natural_daylight'?'day':'night'}}).state);
