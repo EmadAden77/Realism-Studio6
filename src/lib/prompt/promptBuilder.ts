@@ -137,6 +137,9 @@ export function buildExpressionAndGazePrompt(state: SceneState): string {
 export function buildClothingAndFabricPrompt(state: SceneState): string {
   const { clothing } = state;
   const parts: string[] = [];
+  if (/^(set_|mono_|cas_)/.test(clothing.activeOutfitPresetId) && clothing.customOutfitDescription) {
+    parts.push('coordinated outfit construction: '+clothing.customOutfitDescription);
+  }
 
   const upperDesc = clothing.upper.nameEn;
   const lowerDesc = clothing.lower.nameEn;
