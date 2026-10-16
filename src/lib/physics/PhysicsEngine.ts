@@ -110,9 +110,7 @@ export function compileMechanicalPrompt(s:SceneState):string{
  } else if(s.pose.category==='standing'){
   parts.push('BODY MECHANICS: center of mass balanced over planted feet, gravity-aligned clothing drape and natural load transfer at ankles, knees and hips.');
  }
- const material=s.clothing.upper.material;
- const fabric=material==='woven_thobe_fabric'?'woven thobe textile':material.replaceAll('_',' ');
- parts.push('TEXTILE MECHANICS: '+fabric+' and '+s.clothing.lower.material.replaceAll('_',' ')+' respond to gravity, friction and pressure, with no invented folds away from seams, joints or contact points.');
+ parts.push(compileMaterialContactPrompt(s));
  parts.push('CAMERA RIG: '+s.camera.angle.replaceAll('_',' ')+' pitch orientation and '+s.camera.naturalHandheldRollDeg+' degree handheld roll; no physically impossible hovering camera.');
  return parts.join('\n');
 }
@@ -120,4 +118,38 @@ export function calculateIntegrity(s:SceneState){
  const active=PHYSICS_RULES_MATRIX.filter(r=>r.active(s));
  const violated=active.filter(r=>r.conflict(s));
  return {active:active.length,violated:violated.length,score:active.length?Math.round(100*(active.length-violated.length)/active.length):100};
+}
+
+export const MATERIAL_BEHAVIOR = {
+ lightweight_cotton:{drape:'soft light folds',friction:'moderate grip against cotton bedding',specular:'very low sheen'},
+ medium_cotton:{drape:'medium-weight gravity folds',friction:'moderate surface friction',specular:'matte diffuse reflection'},
+ heavy_cotton:{drape:'broad structured weight-bearing folds',friction:'moderate-to-high fabric contact',specular:'low sheen'},
+ jersey_knit:{drape:'elastic drape following joint motion',friction:'moderate contact grip',specular:'soft low sheen'},
+ athletic_polyester:{drape:'light flowing folds that follow tension lines',friction:'relatively low surface grip',specular:'subtle technical fabric highlights'},
+ cotton_poly_blend:{drape:'medium flexible fold radius',friction:'moderate surface grip',specular:'restrained mixed-fiber highlights'},
+ woven_thobe_fabric:{drape:'long continuous woven panels with measured diagonal creases',friction:'gentle seat and knee interaction',specular:'restrained woven highlights'},
+ linen_blend:{drape:'angular broken folds and persistent creases',friction:'moderate dry fiber contact',specular:'matte scattering'},
+ denim:{drape:'stiff broad creases concentrated near joints',friction:'higher resistant friction at seated interfaces',specular:'subdued twill reflection'}
+} as const;
+export function compileMaterialContactPrompt(s:SceneState):string{
+ const top=MATERIAL_BEHAVIOR[s.clothing.upper.material];
+ const bottom=MATERIAL_BEHAVIOR[s.clothing.lower.material];
+ const lines=[
+  'MATERIAL CONTACT MATRIX: upper garment '+s.clothing.upper.nameEn+', '+top.drape+', '+top.specular+'; lower garment '+s.clothing.lower.nameEn+', '+bottom.drape+', '+bottom.friction+'.'
+ ];
+ if(s.pose.category==='sitting'){
+  lines.push('At the supported seat contact, the lower garment is compressed beneath hips and thighs while cloth gathers around flexed knees; wrinkle direction follows supported load and actual seam positions.');
+ }else if(s.pose.category==='reclining'){
+  lines.push('At cushion, pillow or mattress contacts, existing garments flatten under the supported body segments, with gravity drape redirected toward free edges rather than uniform random wrinkles.');
+ }else if(s.pose.category==='walking'){
+  lines.push('Alternating leg motion creates asymmetric knee and hip folds; loose hems trail only slightly according to weight and movement, without impossible airborne cloth.');
+ }
+ if(s.pose.freeHand==='adjusting_item'){
+  lines.push('Any fabric pinch must have a visible contacting hand, realistic local tension and connected arm joints; no detached or duplicated fingers.');
+ }
+ if(s.clothing.outer){
+  const outer=MATERIAL_BEHAVIOR[s.clothing.outer.material];
+  lines.push('Outer layer '+s.clothing.outer.nameEn+': '+outer.drape+', physically separated from inner fabric with real overlap shadows.');
+ }
+ return lines.join(' ');
 }
