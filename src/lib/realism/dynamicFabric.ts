@@ -39,6 +39,17 @@ export function buildDynamicFabricPrompt(state: SceneState): string {
     parts.push('heavyweight twill denim with structural stiffness, distinct whiskering folds at hip flexure, and sturdy double-stitched seams');
   }
 
+  // Localized force transfer from an explicitly chosen free-hand action.
+  const handAction = state.v5Context?.handAction || 'none';
+  if (handAction === 'pinch_sleeve') {
+    parts.push('localized finger pinch at the existing sleeve hem creates radial tension folds and minute contact shadow; fabric outside the grip follows gravity');
+  } else if (handAction === 'lift_duvet' && (state.environmentCategory === 'bedroom' || state.environmentCategory === 'home_general')) {
+    parts.push('duvet edge lifted from an actual grip point, with material thickness, downward sag and believable occlusion of the fingers');
+  }
+  if (clothing.outer) {
+    parts.push('separate inner and outer fabric layers with non-intersecting hems, independent folds and contact shadows where they overlap');
+  }
+
   // Posture specific fold geometry
   if (pose.category === 'sitting') {
     parts.push(
