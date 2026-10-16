@@ -7,8 +7,7 @@ import type { ImageReviewItem, ImageReviewState, SceneState } from '../../types/
 
 /**
  * Generated Image Realism Review Engine
- * Optional module that analyzes actual generated images against physical rules
- * and reference identity.
+ * Local scene-rule checklist. It does NOT inspect image pixels or verify identity.
  */
 export function evaluateGeneratedImageLocally(
   imageUrl: string,
@@ -25,7 +24,7 @@ export function evaluateGeneratedImageLocally(
       severity: 'info',
       issueAr: 'فحص استقامة ومدى ذراع السيلفي',
       evidenceEn: `Expected handheld selfie arm distance ~${state.pose.selfieArmDistanceCm}cm. Verify elbow joint is anatomically connected to shoulder.`,
-      confidence: 0.88,
+      confidence: 0,
       suggestedPromptCorrectionEn: 'Ensure right forearm enters lower frame at realistic angle anchored to shoulder girdle without elongation.',
       elementsToPreserveEn: 'Facial bone structure and natural hairline.'
     });
@@ -39,7 +38,7 @@ export function evaluateGeneratedImageLocally(
       severity: 'info',
       issueAr: 'فحص كثافة الشعر وعدم طمس خط الجبهة',
       evidenceEn: 'Observed natural hair density must preserve authentic temple recession and strand separation.',
-      confidence: 0.92,
+      confidence: 0,
       suggestedPromptCorrectionEn: 'Maintain biological hairline contours without artificial density thickening at temples.',
       elementsToPreserveEn: 'Hair length and natural growth direction.'
     });
@@ -53,7 +52,7 @@ export function evaluateGeneratedImageLocally(
       severity: 'info',
       issueAr: 'فحص انعدام إضاءة الغرفة في وضع الشاشة فقط',
       evidenceEn: 'Screen-only lighting must show steep light falloff into dark bedroom background without ambient rim light.',
-      confidence: 0.95,
+      confidence: 0,
       suggestedPromptCorrectionEn: 'Keep background bedroom in genuine shadow; illuminate only anterior facial planes directly facing phone display.',
       elementsToPreserveEn: 'Dark wood headboard and mattress position.'
     });
@@ -67,7 +66,7 @@ export function evaluateGeneratedImageLocally(
       severity: 'info',
       issueAr: 'فحص طيات انضغاط الملابس عند الجلوس أو الاستلقاء',
       evidenceEn: 'Natural textile creases must appear radiating along hips and body-support contact planes.',
-      confidence: 0.85,
+      confidence: 0,
       suggestedPromptCorrectionEn: 'Add horizontal tension folds along shorts thighs and compress shirt fabric where pressed against bedding.',
       elementsToPreserveEn: 'Garment colors and cotton material texture.'
     });
@@ -80,8 +79,8 @@ export function evaluateGeneratedImageLocally(
     analysisCompleted: true,
     reviewItems: items,
     overallRealismAssessmentAr:
-      'تم التدقيق الفيزيائي على الصورة المولدة ومقارنتها بقواعد شاومي 15 ألترا وأقفال الهوية. التقرير يوضح النقاط الواجب تثبيتها وتعديلها بدقة.',
+      'هذه قائمة مراجعة إرشادية مستخرجة من إعدادات المشهد، وليست نتيجة فحص بصري للصورة أو قياسًا لدقة الهوية. راجع الصورة بنفسك وحدد الأخطاء الفعلية.',
     targetedEditInstructionsEn:
-      'Targeted prompt adjustments generated to correct physical inconsistencies while preserving confirmed facial identity.'
+      'Checklist only: visually verify anatomy, light direction, fabric contact and reference identity before applying edits. Keep the original identity and scene locks.'
   };
 }
